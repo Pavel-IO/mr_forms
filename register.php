@@ -58,7 +58,6 @@ if (empty($values['VisitID'])) {
     } else {
         $values['status'] = 1;
         $values['AssignedID'] = $values['VisitID'];
-        $response['message'] = 'Id '.$values['VisitID'].' je volné. Bylo uloženo.';
     }
 }
 $forms->insertForm($values);
