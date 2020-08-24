@@ -25,6 +25,30 @@ class MrForms {
     }
 }
 
+class Response {
+    private bool $status;
+    private ?string $assignedId = null;
+    private string $message = '';
+
+    public function statusOk(string $id): void {
+        $this->status = 1;
+        $this->assignedId = $id;
+    }
+
+    public function statusError(string $message): void {
+        $this->status = 0;
+        $this->message = $message;
+    }
+
+    public function getDbValues(): array {
+        return ['status' => $this->status, 'AssignedID' => $this->assignedId];
+    }
+
+    public function getClientResponse(): array {
+        return ['status' => $this->status ? 'ok' : 'error', 'assignedId' => $this->assignedId ?? '', 'message' => $this->message];
+    }
+}
+
 function validateId(string $id, string $suffix): bool {
     assert(strlen($suffix) == 1);
     return strlen($id) >=2 && substr($id, -1) == $suffix && is_numeric(substr($id, 0, -1));
@@ -39,28 +63,20 @@ foreach ($allowed as $key) {
     $values[$key] = !empty($src[$key]) ? $src[$key] : '';
 }
 
-$response = ['status' => 'ok', 'assignedId' => '', 'message' => ''];
+$response = new Response;
 $forms = new MrForms(new Connection('mysql:host=127.0.0.1;dbname=mr_forms', '***', '***'));
 if (empty($values['VisitID'])) {
-    $newId = ($forms->highestIdInt() + 1).ID_SUFFIX;
-    $values['AssignedID'] = $newId;
-    $values['status'] = 1;
-    $response['assignedId'] = $newId;
+    $response->statusOk(($forms->highestIdInt() + 1).ID_SUFFIX);
 } elseif (!validateId($values['VisitID'], ID_SUFFIX)) {
-    $values['status'] = 0;
-    $response['status'] = 'error';
-    $response['message'] = 'Zadané id '.$values['VisitID'].' je v nesprávném formátu. Použijte prosím tvar "<číslo>'.ID_SUFFIX.'".';
+    $response->statusError('Zadané id '.$values['VisitID'].' je v nesprávném formátu. Použijte prosím tvar "<číslo>'.ID_SUFFIX.'".');
 } else {
     if ($forms->hasId($values['VisitID'])) {
-        $values['status'] = 0;
-        $response['status'] = 'error';
-        $response['message'] = 'Id '.$values['VisitID'].' je již použito. Vyberte prosím jiné.';
+        $response->statusError('Id '.$values['VisitID'].' je již použito. Vyberte prosím jiné.');
     } else {
-        $values['status'] = 1;
-        $values['AssignedID'] = $values['VisitID'];
+        $response->statusOk($values['VisitID']);
     }
 }
-$forms->insertForm($values);
+$forms->insertForm($values + $response->getDbValues());
 
 // '{"status":"ok", "assignedId": "1234A", "message":""}';
-echo json_encode($response);
+echo json_encode($response->getClientResponse());
