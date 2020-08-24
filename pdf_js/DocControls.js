@@ -1,26 +1,45 @@
 function DocControls(docObj) {
     this.formFields = [
         'VisitID', 'Jmeno', 'Prijmeni', 'RC', 'Datum_narozeni', 'Matersky_jazyk',
-        'Vyska', 'Vaha', 'Pohlavi', 'Stranova_dominance', 'Zrakova_korekce'
+        'Vyska', 'Vaha', 'Pohlavi', 'Stranova_dominance', 'Zrakova_korekce', 'Datum'
     ];
+    this.formChecked = [
+        'Operace_hlavy', 'Operace_oci', 'Svorka', 'Rovnatka', 'Proteza',
+        'Naplast', 'Tetovani', 'Klaustrofobie', 'Cocky', 'Piercing',
+        'Operace_srdce', 'Srouby', 'Kardiostimulator', 'Infuzni_pumpa', 'Kochlear',
+        'El_zarizeni', 'Chlopen', 'Strepina_oko', 'Strepina_telo'
+    ];
+
     this.getFieldValue = function(key) {
         return docObj.getField(key).value.toString().trim();
     }
+
     this.validateFormValues = function() {
         var emptyFields = [];
-        for (index in this.formFields) {
-            var key = this.formFields[index];
-            var value = this.getFieldValue(key);
-            if ((!value || value == 'Off') && key != 'VisitID') {
+        var validateField = function(obj, key) {
+            var value = obj.getFieldValue(key);
+            if ((!value || value == 'Off')) {
                 emptyFields.push(key);
             }
+        };
+        var allCheckedFields = this.formFields.concat(this.formChecked);
+        for (index in allCheckedFields) {
+            if (allCheckedFields[index] != 'VisitID') {
+                validateField(this, allCheckedFields[index]);
+            }
+        }
+        if (this.getFieldValue('Pohlavi') == 'Zena') {
+            validateField(this, 'Tehotna');
         }
         if (emptyFields.length > 0) {
+            this.disablePrint();
+            this.statusError();
             this.showMessage('Formulář obsahuje nevyplněná pole: ' + emptyFields.join(', ') + '.');
             return false;
         }
         return true;
     };
+
     this.getFormValues = function() {
         var params = {};
         for (index in this.formFields) {
