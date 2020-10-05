@@ -1,9 +1,8 @@
-var serverUrl = 'http://localhost/mr_forms/register.php';
-var createRequest = function(serverUrl, jsonSrc) {
+var saveFormRequest = function(serverUrl, jsonSrc) {
     return serverUrl + '?form=' + encodeURI(JSON.stringify(jsonSrc));
 };
 
-var successResponse = function(docControls) {
+var saveFormSuccessResponse = function(docControls) {
     return function(response) {
         try {
             var responseObj = JSON.parse(response);
@@ -27,5 +26,5 @@ var successResponse = function(docControls) {
 };
 
 if (docControls.validateFormValues()) {
-    trustedLoadData(createRequest(serverUrl , docControls.getFormValues()), successResponse(docControls));
+    trustedLoadData(saveFormRequest(serverUrl, docControls.getFormValues()), saveFormSuccessResponse(docControls));
 }

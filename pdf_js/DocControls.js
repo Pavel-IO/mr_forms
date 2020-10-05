@@ -76,3 +76,4 @@ function DocControls(docObj) {
 }
 
 var docControls = new DocControls(this);
+var serverUrl = 'http://localhost/mr_forms/register.php';
