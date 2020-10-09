@@ -23,6 +23,10 @@ class MrForms {
     public function hasId(string $id): bool {
         return $this->db->fetchField('SELECT COUNT(*) FROM forms WHERE AssignedID = ?', $id) > 0;
     }
+
+    public function getDatesForId(string $id): array {
+        return array_values($this->db->fetchPairs('SELECT id, DATE_FORMAT(inserted, "%e. %c. %Y") FROM forms WHERE AssignedID = ? ORDER BY id', $id));
+    }
 }
 
 class Response {
@@ -30,9 +34,10 @@ class Response {
     private ?string $assignedId = null;
     private string $message = '';
 
-    public function statusOk(string $id): void {
+    public function statusOk(string $id, string $message = ''): void {
         $this->status = 1;
         $this->assignedId = $id;
+        $this->message = $message;
     }
 
     public function statusError(string $message): void {
@@ -80,7 +85,7 @@ function actionSave($config) {
         $response->statusError('Zadané id '.$values['VisitID'].' je v nesprávném formátu. Použijte prosím tvar "<číslo>'.ID_SUFFIX.'".');
     } else {
         if ($forms->hasId($values['VisitID'])) {
-            $response->statusError('Id '.$values['VisitID'].' je již použito. Vyberte prosím jiné.');
+            $response->statusOk($values['VisitID'], 'Id '.$values['VisitID'].' již bylo použito: '.implode(', ', $forms->getDatesForId($values['VisitID'])));
         } else {
             $response->statusOk($values['VisitID']);
         }

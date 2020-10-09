@@ -12,12 +12,18 @@ var saveFormSuccessResponse = function(docControls) {
                 }
                 docControls.statusOk();
                 docControls.enablePrint();
+                if (responseObj.message) {
+                    docControls.statusNote();
+                }
             } else {
                 docControls.statusError();
                 docControls.disablePrint()
             }
             if (responseObj.message) {
+                docControls.setNote(responseObj.message);
                 docControls.showMessage(responseObj.message);
+            } else {
+                docControls.hiddenNote();
             }
         } catch (e) {
             docControls.showMessage('Invalid server response: ' + response);

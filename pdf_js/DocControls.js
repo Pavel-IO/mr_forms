@@ -54,8 +54,18 @@ function DocControls(docObj) {
     this.setDate = function(date) {
         docObj.getField('Datum').value = date;
     };
+    this.setNote = function(note) {
+        docObj.getField('Notification').display = display.noPrint;
+        docObj.getField('Notification').value = note;
+    };
+    this.hiddenNote = function(note) {
+        docObj.getField('Notification').display = display.hidden;
+    };
     this.statusOk = function() {
         docObj.getField('Potvrdit').fillColor = color.green;
+    }
+    this.statusNote = function(message) {
+        docObj.getField('Potvrdit').fillColor = color.cyan;
     }
     this.statusError = function() {
         docObj.getField('Potvrdit').fillColor = color.red;
@@ -71,6 +81,8 @@ function DocControls(docObj) {
     }
     this.resetForm = function() {
         this.disablePrint();
+        this.setNote('');
+        this.hiddenNote();
         docObj.getField('Potvrdit').fillColor = ['RGB', 0.75, 0.75, 0.75];
     }
 }
