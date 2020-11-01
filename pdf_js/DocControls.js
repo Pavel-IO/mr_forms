@@ -1,4 +1,6 @@
 function DocControls(docObj) {
+    this.locked = false;
+
     this.formFields = [
         'VisitID', 'Jmeno', 'Prijmeni', 'RC', 'Datum_narozeni', 'Matersky_jazyk',
         'Vyska', 'Vaha', 'Pohlavi', 'Stranova_dominance', 'Zrakova_korekce', 'Datum'
@@ -40,6 +42,30 @@ function DocControls(docObj) {
         return true;
     };
 
+    this.isLocked = function() {
+        return this.locked;
+    }
+
+    this.lockFields = function(state) {
+        for (index in this.formFields) {
+            docObj.getField(this.formFields[index]).readonly = state;
+        }
+    };
+
+    this.lock = function() {
+        this.locked = true;
+        this.lockFields(true);
+        this.enablePrint();
+        docObj.getField('Potvrdit').buttonSetCaption('Odemknout');
+    }
+
+    this.unlock = function() {
+        this.locked = false;
+        this.lockFields(false);
+        this.disablePrint();
+        docObj.getField('Potvrdit').buttonSetCaption('Potvrdit');
+    }
+
     this.getFormValues = function() {
         var params = {};
         for (index in this.formFields) {
@@ -70,9 +96,11 @@ function DocControls(docObj) {
     this.statusError = function() {
         docObj.getField('Potvrdit').fillColor = color.red;
     }
+    // navazano na lock(), nepozivat samostatne
     this.enablePrint = function() {
         docObj.getField('Tisknout').display = display.noPrint;
     }
+    // navazano na unlock(), nepozivat samostatne
     this.disablePrint = function() {
         docObj.getField('Tisknout').display = display.hidden;
     }
@@ -80,7 +108,7 @@ function DocControls(docObj) {
         app.alert(message);
     }
     this.resetForm = function() {
-        this.disablePrint();
+        this.unlock();
         this.setNote('');
         this.hiddenNote();
         docObj.getField('Potvrdit').fillColor = ['RGB', 0.75, 0.75, 0.75];

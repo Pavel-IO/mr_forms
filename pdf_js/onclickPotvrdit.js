@@ -11,13 +11,13 @@ var saveFormSuccessResponse = function(docControls) {
                     docControls.setFormId(responseObj.assignedId);
                 }
                 docControls.statusOk();
-                docControls.enablePrint();
+                docControls.lock();
                 if (responseObj.message) {
                     docControls.statusNote();
                 }
             } else {
                 docControls.statusError();
-                docControls.disablePrint()
+                docControls.unlock();
             }
             if (responseObj.message) {
                 docControls.setNote(responseObj.message);
@@ -26,11 +26,16 @@ var saveFormSuccessResponse = function(docControls) {
                 docControls.hiddenNote();
             }
         } catch (e) {
+            docControls.unlock();
             docControls.showMessage('Invalid server response: ' + response);
         }
     };
 };
 
-if (docControls.validateFormValues()) {
-    trustedLoadData(saveFormRequest(serverUrl, docControls.getFormValues()), saveFormSuccessResponse(docControls));
+if (docControls.isLocked()) {
+    docControls.unlock();
+} else {
+    if (docControls.validateFormValues()) {
+        trustedLoadData(saveFormRequest(serverUrl, docControls.getFormValues()), saveFormSuccessResponse(docControls));
+    }
 }
