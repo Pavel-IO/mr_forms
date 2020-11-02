@@ -24,7 +24,7 @@ function DocControls(docObj) {
                 emptyFields.push(key);
             }
         };
-        var allCheckedFields = this.formFields.concat(this.formChecked);
+        var allCheckedFields = this.getFieldValue('Pohlavi') != 'Jine' ? this.formFields.concat(this.formChecked) : this.formFields;
         for (index in allCheckedFields) {
             if (allCheckedFields[index] != 'VisitID') {
                 validateField(this, allCheckedFields[index]);
