@@ -4,13 +4,13 @@ function DocControls(docObj) {
     this.formFields = [
         'VisitID', 'Jmeno', 'Prijmeni', 'RC', 'Datum_narozeni', 'Matersky_jazyk',
         'Vyska', 'Vaha', 'Pohlavi', 'Stranova_dominance', 'Zrakova_korekce', 'Datum'
-    ];
+    ]
     this.formChecked = [
         'Operace_hlavy', 'Operace_oci', 'Svorka', 'Rovnatka', 'Proteza',
         'Naplast', 'Tetovani', 'Klaustrofobie', 'Cocky', 'Piercing',
         'Operace_srdce', 'Srouby', 'Kardiostimulator', 'Infuzni_pumpa', 'Kochlear',
         'El_zarizeni', 'Chlopen', 'Strepina_oko', 'Strepina_telo'
-    ];
+    ]
 
     this.getFieldValue = function(key) {
         return docObj.getField(key).value.toString().trim();
@@ -24,7 +24,7 @@ function DocControls(docObj) {
                 emptyFields.push(key);
             }
         };
-        var allCheckedFields = this.getFieldValue('Pohlavi') != 'Jine' ? this.formFields.concat(this.formChecked) : this.formFields;
+        var allCheckedFields = this.isFantom() ? [] : this.formFields.concat(this.formChecked);
         for (index in allCheckedFields) {
             if (allCheckedFields[index] != 'VisitID') {
                 validateField(this, allCheckedFields[index]);
@@ -40,7 +40,11 @@ function DocControls(docObj) {
             return false;
         }
         return true;
-    };
+    }
+
+    this.isFantom = function() {
+        return this.getFieldValue('Fantom') != 'Off';
+    }
 
     this.isLocked = function() {
         return this.locked;
@@ -50,13 +54,14 @@ function DocControls(docObj) {
         for (index in this.formFields) {
             docObj.getField(this.formFields[index]).readonly = state;
         }
-    };
+    }
 
     this.lock = function() {
         this.locked = true;
         this.lockFields(true);
         this.enablePrint();
         docObj.getField('Potvrdit').buttonSetCaption('Odemknout');
+        docObj.getField('Neulozen').display = display.hidden;
     }
 
     this.unlock = function() {
@@ -64,6 +69,7 @@ function DocControls(docObj) {
         this.lockFields(false);
         this.disablePrint();
         docObj.getField('Potvrdit').buttonSetCaption('Potvrdit');
+        docObj.getField('Neulozen').display = display.noView;
     }
 
     this.getFormValues = function() {
@@ -72,21 +78,21 @@ function DocControls(docObj) {
             params[this.formFields[index]] = this.getFieldValue(this.formFields[index]);
         }
         return params;
-    };
+    }
 
     this.setFormId = function(valueId) {
         docObj.getField('VisitID').value = valueId;
-    };
+    }
     this.setDate = function(date) {
         docObj.getField('Datum').value = date;
-    };
+    }
     this.setNote = function(note) {
         docObj.getField('Notification').display = display.noPrint;
         docObj.getField('Notification').value = note;
-    };
+    }
     this.hiddenNote = function(note) {
         docObj.getField('Notification').display = display.hidden;
-    };
+    }
     this.statusOk = function() {
         docObj.getField('Potvrdit').fillColor = color.green;
     }
