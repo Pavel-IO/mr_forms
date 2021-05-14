@@ -4,6 +4,9 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Nette\Database\Connection;
 use Nette\Utils\Json;
+use Nette\Neon\Neon;
+
+$config = Neon::Decode(file_get_contents('config.neon'));
 
 class MrForms {
     private Connection $db;
@@ -60,16 +63,15 @@ function validateId(string $id, string $suffix): bool {
     return strlen($id) >=2 && substr($id, -1) == $suffix && is_numeric(substr($id, 0, -1));
 }
 
-function buildNewId(MrForms $forms): string {
-    return ($forms->highestIdInt() + 1).ID_SUFFIX;
+function buildNewId(MrForms $forms, string $idSuffix): string {
+    return ($forms->highestIdInt() + 1).$idSuffix;
 }
 
-const ID_SUFFIX = 'A';
-$config = [
-    'dbConnection' => new Connection('mysql:host=127.0.0.1;dbname=mr_forms', '***', '***')
+$container = [
+    'dbConnection' => new Connection($config['dbDsn'], $config['dbUser'], $config['dbPass'])
 ];
 
-function actionSave($config) {
+function actionSave($container, $idSuffix) {
     $allowed = ['VisitID', 'Fantom', 'Jmeno', 'Prijmeni', 'RC', 'Datum_narozeni', 'Matersky_jazyk', 'Vyska', 'Vaha', 'Pohlavi', 'Stranova_dominance', 'Zrakova_korekce'];
 
     $src = (array)Json::decode($_GET['form']);
@@ -79,11 +81,11 @@ function actionSave($config) {
     }
 
     $response = new Response;
-    $forms = new MrForms($config['dbConnection']);
+    $forms = new MrForms($container['dbConnection']);
     if (empty($values['VisitID'])) {
         $response->statusOk(buildNewId($forms));
-    } elseif (!validateId($values['VisitID'], ID_SUFFIX)) {
-        $response->statusError('Zadané id '.$values['VisitID'].' je v nesprávném formátu. Použijte prosím tvar "<číslo>'.ID_SUFFIX.'".');
+    } elseif (!validateId($values['VisitID'], $idSuffix)) {
+        $response->statusError('Zadané id '.$values['VisitID'].' je v nesprávném formátu. Použijte prosím tvar "<číslo>'.$idSuffix.'".');
     } else {
         if ($forms->hasId($values['VisitID'])) {
             $response->statusOk($values['VisitID'], 'Id '.$values['VisitID'].' již bylo použito: '.implode(', ', $forms->getDatesForId($values['VisitID'])));
@@ -97,15 +99,15 @@ function actionSave($config) {
     echo json_encode($response->getClientResponse() + ['dbId' => $dbId]);
 }
 
-function actionNewId($config) {
-    $forms = new MrForms($config['dbConnection']);
-    echo json_encode(['status' => 'ok', 'newId' => buildNewId($forms)]);
+function actionNewId($container, string $idSuffix ) {
+    $forms = new MrForms($container['dbConnection']);
+    echo json_encode(['status' => 'ok', 'newId' => buildNewId($forms, $idSuffix)]);
 }
 
 if (!empty($_GET['form'])) {
-    actionSave($config);
+    actionSave($container, $config['idSuffix']);
 } elseif (!empty($_GET['getNewId'])) {
-    actionNewId($config);
+    actionNewId($container, $config['idSuffix']);
 } else {
     echo 'Invalid request.';
 }

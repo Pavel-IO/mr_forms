@@ -1,0 +1,4 @@
+dbDsn: 'mysql:host=127.0.0.1;dbname=mr_forms'
+dbUser: ***
+dbPass: ***
+idSuffix: A

@@ -11,6 +11,7 @@ CREATE TABLE `forms` (
   `status` int(11) NOT NULL DEFAULT 0,
   `VisitID` varchar(10) COLLATE utf8_bin DEFAULT NULL,
   `AssignedID` varchar(64) COLLATE utf8_bin DEFAULT NULL,
+  `Fantom` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   `Jmeno` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   `Prijmeni` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   `RC` varchar(64) COLLATE utf8_bin DEFAULT NULL,
@@ -24,3 +25,6 @@ CREATE TABLE `forms` (
   `inserted` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+-- 2021-05-14 13:01:49
