@@ -12,8 +12,9 @@ class MrForms {
         $this->db = $db;
     }
 
-    public function insertForm(array $values): void {
+    public function insertForm(array $values): int {
         $this->db->query('INSERT INTO forms ?', $values + ['inserted' => new \Datetime]);
+        return $this->db->getInsertId();
     }
 
     public function highestIdInt(): string {
@@ -90,10 +91,10 @@ function actionSave($config) {
             $response->statusOk($values['VisitID']);
         }
     }
-    $forms->insertForm($values + $response->getDbValues());
+    $dbId = $forms->insertForm($values + $response->getDbValues());
 
-    // '{"status":"ok", "assignedId": "1234A", "message":""}';
-    echo json_encode($response->getClientResponse());
+    // '{"status":"ok", "assignedId": "1234A", "message":"", 'dbId': 456}';
+    echo json_encode($response->getClientResponse() + ['dbId' => $dbId]);
 }
 
 function actionNewId($config) {

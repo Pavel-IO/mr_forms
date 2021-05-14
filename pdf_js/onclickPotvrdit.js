@@ -9,6 +9,7 @@ var saveFormSuccessResponse = function(docControls) {
             if (responseObj.status == 'ok') {
                 if (responseObj.assignedId) {
                     docControls.setFormId(responseObj.assignedId);
+                    docControls.setDbId(responseObj.dbId);
                 }
                 docControls.statusOk();
                 docControls.lock();

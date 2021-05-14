@@ -84,6 +84,9 @@ function DocControls(docObj) {
     this.setFormId = function(valueId) {
         docObj.getField('VisitID').value = valueId;
     }
+    this.setDbId = function(valueId) {
+
+    }
     this.setDate = function(date) {
         docObj.getField('Datum').value = date;
     }
