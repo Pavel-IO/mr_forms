@@ -2,7 +2,7 @@ function DocControls(docObj) {
     this.locked = false;
 
     this.formFields = [
-        'VisitID', 'Jmeno', 'Prijmeni', 'RC', 'Datum_narozeni', 'Matersky_jazyk',
+        'VisitID', 'Fantom', 'Jmeno', 'Prijmeni', 'RC', 'Datum_narozeni', 'Matersky_jazyk',
         'Vyska', 'Vaha', 'Pohlavi', 'Stranova_dominance', 'Zrakova_korekce', 'Datum'
     ]
     this.formChecked = [
@@ -26,8 +26,9 @@ function DocControls(docObj) {
         };
         var allCheckedFields = this.isFantom() ? [] : this.formFields.concat(this.formChecked);
         for (index in allCheckedFields) {
-            if (allCheckedFields[index] != 'VisitID') {
-                validateField(this, allCheckedFields[index]);
+            var currentKey = allCheckedFields[index];
+            if (currentKey != 'VisitID' && currentKey != 'Fantom') {
+                validateField(this, currentKey);
             }
         }
         if (this.getFieldValue('Pohlavi') == 'Zena') {
