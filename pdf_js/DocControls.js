@@ -7,7 +7,7 @@ function DocControls(docObj) {
     ]
     this.formChecked = [
         'Operace_hlavy', 'Operace_oci', 'Svorka', 'Rovnatka', 'Proteza',
-        'Naplast', 'Tetovani', 'Klaustrofobie', 'Cocky', 'Piercing',
+        'Naplast', 'Tetovani', 'Potize', 'Klaustrofobie', 'Cocky', 'Piercing',
         'Operace_srdce', 'Srouby', 'Kardiostimulator', 'Infuzni_pumpa', 'Kochlear',
         'El_zarizeni', 'Chlopen', 'Strepina_oko', 'Strepina_telo'
     ]
