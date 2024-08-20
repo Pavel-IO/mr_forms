@@ -1,0 +1,2 @@
+docControls.updateZastupce();
+docControls.updateName();

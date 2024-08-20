@@ -23,5 +23,7 @@ var newIdSuccessResponse = function(docControls) {
 };
 
 docControls.resetForm();
+docControls.updateZastupce();
+docControls.updateName();
 docControls.setDate(getTodayDate());
 trustedLoadData(newIdRequest(serverUrl), newIdSuccessResponse(docControls));

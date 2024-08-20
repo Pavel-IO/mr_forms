@@ -16,6 +16,8 @@ CREATE TABLE `forms` (
   `Prijmeni` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   `RC` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   `Datum_narozeni` varchar(64) COLLATE utf8_bin DEFAULT NULL,
+  `Zastupce` varchar(64) COLLATE utf8_bin DEFAULT NULL,
+  `Zastupce_jmeno` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   `Matersky_jazyk` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   `Vyska` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   `Vaha` varchar(64) COLLATE utf8_bin DEFAULT NULL,
@@ -28,3 +30,7 @@ CREATE TABLE `forms` (
 
 
 -- 2021-05-14 13:01:49
+
+ALTER TABLE `forms`
+ADD `Zastupce` varchar(64) COLLATE 'utf8_bin' NULL AFTER `Datum_narozeni`,
+ADD `Zastupce_jmeno` varchar(64) COLLATE 'utf8_bin' NULL AFTER `Zastupce`;
