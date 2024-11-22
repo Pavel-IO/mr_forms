@@ -3,7 +3,7 @@ function DocControls(docObj) {
 
     this.formFields = [
         'VisitID', 'Fantom', 'Zastupce', 'Jmeno', 'Prijmeni', 'RC', 'Datum_narozeni', 'Matersky_jazyk',
-        'Vyska', 'Vaha', 'Pohlavi', 'Stranova_dominance', 'Zrakova_korekce', 'Datum', 'Zastupce_jmeno'
+        'Vyska', 'Vaha', 'Pohlavi', 'Stranova_dominance', 'Zrakova_korekce', 'Datum', 'Zastupce_jmeno', 'Nalez'
     ]
     this.formChecked = [
         'Operace_hlavy', 'Operace_oci', 'Svorka', 'Rovnatka', 'Proteza',

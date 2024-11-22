@@ -5,6 +5,7 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
+-- 2021-05
 DROP TABLE IF EXISTS `forms`;
 CREATE TABLE `forms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -29,8 +30,11 @@ CREATE TABLE `forms` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
--- 2021-05-14 13:01:49
-
+-- 2024-08
 ALTER TABLE `forms`
 ADD `Zastupce` varchar(64) COLLATE 'utf8_bin' NULL AFTER `Datum_narozeni`,
 ADD `Zastupce_jmeno` varchar(64) COLLATE 'utf8_bin' NULL AFTER `Zastupce`;
+
+-- 2024-11
+ALTER TABLE `forms`
+ADD `Nalez` varchar(64) COLLATE 'utf8_bin' NULL AFTER `Zrakova_korekce`;
