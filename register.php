@@ -72,7 +72,7 @@ $container = [
 ];
 
 function actionSave($container, $idSuffix) {
-    $allowed = ['VisitID', 'Fantom', 'Jmeno', 'Prijmeni', 'RC', 'Datum_narozeni', 'Zastupce', 'Zastupce_jmeno', 'Matersky_jazyk', 'Vyska', 'Vaha', 'Pohlavi', 'Stranova_dominance', 'Zrakova_korekce', 'Nalez'];
+    $allowed = ['VisitID', 'Fantom', 'Jmeno', 'Prijmeni', 'RC', 'Datum_narozeni', 'Zastupce', 'Zastupce_jmeno', 'Matersky_jazyk', 'Vyska', 'Vaha', 'Pohlavi', 'Stranova_dominance', 'Zrakova_korekce', 'Nalez', 'Email', 'Telefon'];
 
     $src = (array)Json::decode($_GET['form']);
     $values = [];

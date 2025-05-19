@@ -2,8 +2,8 @@ function DocControls(docObj) {
     this.locked = false;
 
     this.formFields = [
-        'VisitID', 'Fantom', 'Zastupce', 'Jmeno', 'Prijmeni', 'RC', 'Datum_narozeni', 'Matersky_jazyk',
-        'Vyska', 'Vaha', 'Pohlavi', 'Stranova_dominance', 'Zrakova_korekce', 'Datum', 'Zastupce_jmeno', 'Nalez'
+        'VisitID', 'Fantom', 'Zastupce', 'Jmeno', 'Prijmeni', 'RC', 'Datum_narozeni', 'Matersky_jazyk', 'Vyska', 'Vaha',
+        'Pohlavi', 'Stranova_dominance', 'Zrakova_korekce', 'Datum', 'Zastupce_jmeno', 'Nalez', 'Email', 'Telefon'
     ]
     this.formChecked = [
         'Operace_hlavy', 'Operace_oci', 'Svorka', 'Rovnatka', 'Proteza',
@@ -27,7 +27,7 @@ function DocControls(docObj) {
         var allCheckedFields = this.isFantom() ? [] : this.formFields.concat(this.formChecked);
         for (index in allCheckedFields) {
             var currentKey = allCheckedFields[index];
-            if (currentKey != 'VisitID' && currentKey != 'Fantom' && currentKey != 'Zastupce' && currentKey != 'Zastupce_jmeno') {
+            if (['VisitID', 'Fantom', 'Zastupce', 'Zastupce_jmeno', 'Email', 'Telefon'].indexOf(currentKey) < 0) {
                 validateField(this, currentKey);
             }
         }
@@ -41,6 +41,12 @@ function DocControls(docObj) {
             this.disablePrint();
             this.statusError();
             this.showMessage('Formulář obsahuje nevyplněná pole: ' + emptyFields.join(', ') + '.');
+            return false;
+        }
+        if (!this.getFieldValue('Email') != !this.getFieldValue('Telefon')) {
+            this.disablePrint();
+            this.statusError();
+            this.showMessage('Při vyplňování žádosti o předání dat je třeba zadat buď email i telefon, nebo ani jeden údaj.');
             return false;
         }
         return true;
